@@ -34,7 +34,7 @@ int main(){
 while(1){
 fgets(sendBuffer, sizeof(sendBuffer), stdin); //키보드로부터 메세지 입력 받기
 write(c_socket, sendBuffer, strlen(sendBuffer)); //서버로 메세지전송
-if(strncasecmp(sendBuffer, "quit", 4) == 0|| strncasecmp(rcvBuffer, "kill server", 11) == 0)
+if(strncasecmp(sendBuffer, "quit", 4) == 0|| strncasecmp(sendBuffer, "kill server", 11) == 0)
 	break; //입력받은 메세지가 quit이면 break	
 
 //5. 서버에서 보낸 메시지 읽기 
