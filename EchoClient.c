@@ -31,10 +31,13 @@ int main(){
 	}
 
 	//4. 서버에 메세지보내기
+while(1){
 fgets(sendBuffer, sizeof(sendBuffer), stdin); //키보드로부터 메세지 입력 받기
 write(c_socket, sendBuffer, strlen(sendBuffer)); //서버로 메세지전송
+if(strncasecmp(sendBuffer, "quit", 4) == 0)
+	break; //입력받은 메세지가 quit이면 break	
 
-	//5. 서버에서 보낸 메시지 읽기 
+//5. 서버에서 보낸 메시지 읽기 
 	n = read(c_socket, rcvBuffer, sizeof(rcvBuffer)); 
 	//서버에서 보내준 메세지를 rcvBuffer에 저장하고, 메세지의 길이를 리턴
 	//만약 read에 실패하면, -1을 리턴
@@ -45,6 +48,7 @@ write(c_socket, sendBuffer, strlen(sendBuffer)); //서버로 메세지전송
 	rcvBuffer[n] = '\0'; //문자열 뒷부분 깨짐 방지
 	printf("received data: %s\n", rcvBuffer); //서버에서 받은 메세지 출력
 	printf("rcvBuffer length: %d\n", n); //3-2. 서버에섭 다은 메세지의 길이 출력 
+}
 	close(c_socket);
 	return 0;	
 }
