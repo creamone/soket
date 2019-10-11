@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <string.h>
@@ -7,6 +7,9 @@
 
 char buffer[100] = "Hi i'm server\n";
 char rcvBuffer[100];
+char creamBuffer1[50] = "안녕하세요 만나서 반가워요\n";
+char creamBuffer2[30] = "내 이름은 김진수야\n";
+char creamBuffer3[30] = "나는 24살이야\n";
 
 int main(){
 	int c_socket, s_socket;
@@ -47,16 +50,38 @@ int main(){
 		printf("/client is connected\n");
 		printf("클라이언트 접속 허용\n");
 		while(1){
-		n=read(c_socket, rcvBuffer, sizeof(rcvBuffer));
+		n=read(c_socket,rcvBuffer,sizeof(rcvBuffer));
+   	rcvBuffer[n] = '\0';
 		printf("rcvBuffer: %s\n", rcvBuffer);
-		if(strncasecmp(rcvBuffer, "quit", 4) == 0|| strncasecmp(rcvBuffer, "kill server", 11) == 0)
+		
+		if(strncasecmp(rcvBuffer, "안녕하세요", 10) == 0){
+			strncpy(rcvBuffer, creamBuffer1, sizeof(creamBuffer1));
+			write(c_socket, creamBuffer1, sizeof(creamBuffer1));
+	continue;}
+
+		 if(strncasecmp(rcvBuffer, "이름이 머야?", 12) == 0){
+			strncpy(rcvBuffer, creamBuffer2,sizeof(creamBuffer2));
+			write(c_socket, creamBuffer2, sizeof(creamBuffer2));	
+continue;
+}
+		if(strncasecmp(rcvBuffer, "몇 살이야?", 10) == 0){
+			strncpy(rcvBuffer, creamBuffer3, sizeof(creamBuffer3));
+			write(c_socket, creamBuffer3, sizeof(creamBuffer3));	
+continue;
+}
+		 if(strncasecmp(rcvBuffer, "quit", 4) == 0|| strncasecmp(rcvBuffer, "kill server", 11) == 0)
 			break;
+
+		
 		write(c_socket, rcvBuffer, n); //클라이언트에게 buffer의 내용을 전송함
+		
 	}
+		
+		close(c_socket);
 		if(strncasecmp(rcvBuffer, "kill server", 11) == 0)
 		break;
-		close(c_socket);
 	}
 	close(s_socket);
 	return 0;	
 }
+
