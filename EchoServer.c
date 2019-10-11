@@ -51,29 +51,30 @@ int main(){
 		printf("클라이언트 접속 허용\n");
 		while(1){
 		n=read(c_socket,rcvBuffer,sizeof(rcvBuffer));
-   	rcvBuffer[n] = '\0';
 		printf("rcvBuffer: %s\n", rcvBuffer);
-		
-		if(strncasecmp(rcvBuffer, "안녕하세요", 10) == 0){
-			strncpy(rcvBuffer, creamBuffer1, sizeof(creamBuffer1));
-			write(c_socket, creamBuffer1, sizeof(creamBuffer1));
-	continue;}
 
-		 if(strncasecmp(rcvBuffer, "이름이 머야?", 12) == 0){
-			strncpy(rcvBuffer, creamBuffer2,sizeof(creamBuffer2));
-			write(c_socket, creamBuffer2, sizeof(creamBuffer2));	
-continue;
-}
-		if(strncasecmp(rcvBuffer, "몇 살이야?", 10) == 0){
-			strncpy(rcvBuffer, creamBuffer3, sizeof(creamBuffer3));
-			write(c_socket, creamBuffer3, sizeof(creamBuffer3));	
-continue;
-}
 		 if(strncasecmp(rcvBuffer, "quit", 4) == 0|| strncasecmp(rcvBuffer, "kill server", 11) == 0)
 			break;
 
 		
-		write(c_socket, rcvBuffer, n); //클라이언트에게 buffer의 내용을 전송함
+		if(strncasecmp(rcvBuffer, "안녕하세요", 10) == 0){
+			strncpy(rcvBuffer, creamBuffer1, sizeof(creamBuffer1));
+		
+	}
+
+		 if(strncasecmp(rcvBuffer, "이름이 머야?", 12) == 0){
+			strncpy(rcvBuffer, creamBuffer2,sizeof(creamBuffer2));
+				
+
+}
+		if(strncasecmp(rcvBuffer, "몇 살이야?", 10) == 0){
+			strncpy(rcvBuffer, creamBuffer3, sizeof(creamBuffer3));
+				
+
+}
+		
+		write(c_socket, rcvBuffer, strlen(rcvBuffer)); //클라이언트에게 buffer의 내용을 전송함
+		memset(rcvBuffer, '\0', 100);
 		
 	}
 		
