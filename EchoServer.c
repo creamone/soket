@@ -4,12 +4,10 @@
 #include <string.h>
 
 #define PORT 10000
-
+//sizeof
+//
 char buffer[100] = "Hi i'm server\n";
 char rcvBuffer[100];
-char creamBuffer1[50] = "안녕하세요 만나서 반가워요\n";
-char creamBuffer2[30] = "내 이름은 김진수야\n";
-char creamBuffer3[30] = "나는 24살이야\n";
 
 int main(){
 	int c_socket, s_socket;
@@ -50,31 +48,27 @@ int main(){
 		printf("/client is connected\n");
 		printf("클라이언트 접속 허용\n");
 		while(1){
-		n=read(c_socket,rcvBuffer,sizeof(rcvBuffer));
+		n=read(c_socket,rcvBuffer,sizeof(rcvBuffer)); // 일단 문자열을 받는데 뭘 받는지모르니까 sizeof으로 하고  그다음 write에서 받으면 그때서야 strlen(buffer)가가
 		printf("rcvBuffer: %s\n", rcvBuffer);
 
 		 if(strncasecmp(rcvBuffer, "quit", 4) == 0|| strncasecmp(rcvBuffer, "kill server", 11) == 0)
 			break;
 
 		
-		if(strncasecmp(rcvBuffer, "안녕하세요", 10) == 0){
-			strncpy(rcvBuffer, creamBuffer1, sizeof(creamBuffer1));
-		
-	}
-
-		 if(strncasecmp(rcvBuffer, "이름이 머야?", 12) == 0){
-			strncpy(rcvBuffer, creamBuffer2,sizeof(creamBuffer2));
+		else if(!strncasecmp(rcvBuffer, "안녕하세요",strlen("안녕하세요")))
+			strcpy(buffer,"안녕하세요.만나서 반가워요.");
+		else if(!strncasecmp(rcvBuffer, "이름이 머야?",strlen("이름이 머야?")))
+			strcpy(buffer,"내 이름은 김진수야.");
+		else if(!strncasecmp(rcvBuffer, "몇 살이야?",strlen("몇 살이야?")))
+			strcpy(buffer,"나는 24살이야.");
+		else						
+			strcpy(buffer, "무슨 말인지 모르겠습니다.");
 				
-
-}
-		if(strncasecmp(rcvBuffer, "몇 살이야?", 10) == 0){
-			strncpy(rcvBuffer, creamBuffer3, sizeof(creamBuffer3));
-				
-
-}
 		
-		write(c_socket, rcvBuffer, strlen(rcvBuffer)); //클라이언트에게 buffer의 내용을 전송함
-		memset(rcvBuffer, '\0', 100);
+		write(c_socket, rcvBuffer, strlen(buffer)); //클라이언트에게 buffer의 내용을 전송함
+
+				
+		
 		
 	}
 		
