@@ -65,7 +65,7 @@ int main(){
 			strcpy(buffer, "무슨 말인지 모르겠습니다.");
 				
 		
-		write(c_socket, rcvBuffer, strlen(buffer)); //클라이언트에게 buffer의 내용을 전송함
+		write(c_socket, buffer, strlen(buffer)); //클라이언트에게 buffer의 내용을 전송함
 
 				
 		
