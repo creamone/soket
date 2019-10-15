@@ -64,6 +64,25 @@ int main(){
 		else if(!strncasecmp(rcvBuffer, "strlen ",strlen("strlen ")))
 			//문자열의 길이는 XX입니다.
 			sprintf(buffer, "문자열의 길이는 %d입니다. ", strlen(rcvBuffer)-7);
+
+		else if (!strncasecmp(rcvBuffer, "readfile ",strlen("readfile "))){
+
+					FILE *fp;
+					char buff[255];					
+
+					fp = fopen("text.txt", "r");
+					if(fp){
+						while(fgets(buff, 255, (FILE *)fp)){
+							printf("%s", buff);
+						}
+					}
+					fclose(fp);
+				}
+
+
+
+
+
 		else if (!strncasecmp(rcvBuffer, "strcmp ",strlen("strcmp "))){
 					char *token;
 					char *str[3];
