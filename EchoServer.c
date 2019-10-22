@@ -4,6 +4,7 @@
 #include <string.h>
 
 #define PORT 10000
+#define BUFSIZE 10000
 //sizeof(buffer)==>100(베열의 길이)
 //strlen(buffer)==>15(문자열의 길이)
 char buffer[100] = "Hi i'm server\n";
@@ -65,24 +66,6 @@ int main(){
 			//문자열의 길이는 XX입니다.
 			sprintf(buffer, "문자열의 길이는 %d입니다. ", strlen(rcvBuffer)-7);
 
-		else if (!strncasecmp(rcvBuffer, "readfile ",strlen("readfile "))){
-
-					FILE *fp;
-					char buff[255];					
-
-					fp = fopen("text.txt", "r");
-					if(fp){
-						while(fgets(buff, 255, (FILE *)fp)){
-							printf("%s", buff);
-						}
-					}
-					fclose(fp);
-				}
-
-
-
-
-
 		else if (!strncasecmp(rcvBuffer, "strcmp ",strlen("strcmp "))){
 					char *token;
 					char *str[3];
@@ -104,14 +87,42 @@ int main(){
 				else 
 					sprintf(buffer, "%s와 %s는 다른 문자열입니다.",  str[1], str[2]);
 				printf("%s\n", buffer);
-		
+		}else if(!strncmp(rcvBuffer, "readfile ", strlen("readfile "))) {
+			char *token;
+			char *str[10];
+			int cnt = 0;
+			token = strtok(rcvBuffer, " ");	//token = readfile
+			
+			token = strtok(NULL, " "); //token = <파일명> 
+			FILE *fp = fopen(token, "r"); 
+			if(fp){ //정상적으로 파일이 오픈되었다면,
+				char tempStr[BUFSIZE]; // 파일 내용을 저장할 변수
+				memset(buffer, 0, BUFSIZE); //buffer 초기화
+				while(fgets(tempStr, BUFSIZE, (FILE *)fp)){
+					strcat(buffer, tempStr); //여러 줄의 내용을 하나의  buffer에 저장하기 위해 strcat() 함수 사용
+					
+				}
+				fclose(fp);
+		else{	//해당 파일이 없는 경우,
+				strcpy(buffer, "해당 파일은 존재하지 않습니다.");
 		}
-		else						
+	}
+}else if(!strncasecmp(rcvBuffer, "exec ", 5))){
+		char *command;
+		char *token;
+		token = strtok(rcvBuffer, " "); //token = exec
+		command = strtok(NULL, "\0");	//exec 뒤에 있는 모든 문자열을  command로 저장
+		printf("command:%s\n", command);
+		int result = system(command);	//command가 정상 실행되면 0을 리턴, 그렇지 않으면 에러코드 리턴
+		if(!result){ //성공한 경우,
+			sprintf(buffer, "[%s] 명령어가 성공했습니다.", command);
+		else
+			sprintf(buffer, "[%s] 명령어가 실패했습니다.", command);	
+		}	
+		else		
 			strcpy(buffer, "무슨 말인지 모르겠습니다.");
 				
-		
 		write(c_socket, buffer, strlen(buffer)); //클라이언트에게 buffer의 내용을 전송함
-		
 	}
 		
 		close(c_socket);
@@ -121,4 +132,5 @@ int main(){
 	close(s_socket);
 	return 0;	
 }
+
 
