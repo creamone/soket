@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -5,7 +6,7 @@
 
 #define PORT 10000
 #define IPADDR "127.0.0.1"
-#define BUFSIZE 100
+#define BUFSIZE 10000
 
 int main(){
 	int c_socket; 
