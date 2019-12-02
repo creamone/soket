@@ -12,9 +12,9 @@
 #define PORT 9000
 void *do_send_chat(void *);
 void *do_receive_chat(void *);
-pthread_t thread_1, thread_2;//pthread_t p_thread[2];
+pthread_t thread_1, thread_2;
 char    escape[ ] = "exit";
-char    nickname[20]; //int thr_id;
+char    nickname[20];
 int main(int argc, char *argv[ ])
 {
     int c_socket;
@@ -24,7 +24,7 @@ int main(int argc, char *argv[ ])
     char buf[CHATDATA];
     int nfds;
     fd_set read_fds;
-    int n; 
+    int n;
     c_socket = socket(PF_INET, SOCK_STREAM, 0);
     memset(&c_addr, 0, sizeof(c_addr));
     c_addr.sin_addr.s_addr = inet_addr(IPADDR);
@@ -35,32 +35,23 @@ int main(int argc, char *argv[ ])
     if(connect(c_socket, (struct sockaddr *) &c_addr, sizeof(c_addr)) == -1) {
         printf("Can not connect\n");
         return -1;
-    }
+         }
+	write(c_socket, nickname, strlen(nickname));
     //pthread_create with do_send function
-	pthread_create(&thread_1,NULL,do_send_chat,(void *) &c_socket);
+	pthread_create(&thread_1, NULL, do_send_chat, (void *)&c_socket);
     //pthread_create with do_receive_chat function
-	pthread_create(&thread_2,NULL,do_receive_chat,(void *) &c_socket);
+	pthread_create(&thread_2, NULL, do_receive_chat, (void *)&c_socket);
     //pthread_join both threads
-	pthread_join(thread_1,(void **)&nfds);
-	pthread_join(thread_2,(void **)&nfds);
-	printf("programing is end");
-	return 0;
+	pthread_join(thread_1, (void **)&nfds);
+	pthread_join(thread_2, (void **)&nfds);
     close(c_socket);
 }
-
-/*void * pthread_create(void *arg)
-{
-
-}*/
-
 void * do_send_chat(void *arg)
 {
     char chatData[CHATDATA];
     char buf[CHATDATA];
     int n;
     int c_socket = *((int *) arg);        // client socket
-
-
     while(1) {
         memset(buf, 0, sizeof(buf));
         if((n = read(0, buf, sizeof(buf))) > 0 ) { //키보드에서 입력 받은 문자열을 buf에 저장. read()함수의 첫번째 인자는 file descriptor로써, 0은 stdin, 즉 키보드를 의미함.
